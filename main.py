@@ -64,15 +64,13 @@ def delete_file(id):
     print("File successfully deleted")
 
 
-def change_file_name():
-    id = input("Input file id:")
-    name = input("Input new file name:")
-
+def change_file_name(id, name):
     try:
         temp_name = "temp_name"
         download_file(id, temp_name)
         delete_file(id)
         upload_file(temp_name, name)
+        os.remove(temp_name)
     except Exception as ex:
         print("Something going wrong", ex)
         return
@@ -92,6 +90,18 @@ def download_file(id, name):
     except Exception as ex:
         print("File with this id doesn't exist", ex)
 
+def get_id_by_name(name):
+    # Call the Drive v3 API
+    results = service.files().list(
+        pageSize=10, fields="nextPageToken, files(id, name)").execute()
+    items = results.get('files', [])
+    if not items:
+        return None
+    else:
+        for item in items:
+            if item['name'] == name:
+                return item['id']
+    return None
 
 def show_list():
     # Call the Drive v3 API
@@ -125,7 +135,7 @@ def user_menu():
             upload_file_name = input("Input file name:")
             upload_file(upload_file_name, upload_file_name)
         elif command == MENU_CHANGE:
-            change_file_name()
+            change_file_name(input("Input file id:"), input("Input new file name:"))
         elif command == MENU_DELETE:
             delete_file(input("Input file id:"))
         elif command == MENU_EXIT:
