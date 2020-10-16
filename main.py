@@ -50,17 +50,25 @@ service = auth()
 
 
 def upload_file(name, remote_name):
-    file_metadata = {'name': remote_name}
-    media = MediaFileUpload(name)
+    try:
+        file_metadata = {'name': remote_name}
+        media = MediaFileUpload(name)
 
-    file = service.files().create(body=file_metadata,
-                                  media_body=media).execute()
+        file = service.files().create(body=file_metadata,
+                                      media_body=media).execute()
+    except Exception as ex:
+        print("Something going wrong", ex)
+        return
     print("File successfully uploaded")
     return file
 
 
 def delete_file(id):
-    service.files().delete(fileId=id).execute()
+    try:
+        service.files().delete(fileId=id).execute()
+    except Exception as ex:
+        print("Something going wrong", ex)
+        return
     print("File successfully deleted")
 
 
