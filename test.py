@@ -14,7 +14,7 @@ class FullTest(unittest.TestCase):
 
     def test_list(self):
         test = show_list()
-        self.assertEqual('oracle_11gR2' in test, True)
+        self.assertEqual('lab2.rar' in test, True)
 
     def test_download(self):
         download_file('1YTnBVA7GFlCnWm8yDiCPahpKSlcFeK0I', 'test_file')
